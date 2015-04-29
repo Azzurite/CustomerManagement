@@ -1,23 +1,40 @@
-package name.azzurite.CustomerManagement;
+package name.azzurite.customermanagement;
 
+import name.azzurite.customermanagement.config.constants.BuildConstants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 /**
  * Main application class
  */
-@RestController
-@EnableAutoConfiguration
+@SpringBootApplication
 public class CustomerManagement {
 
-	@RequestMapping("/")
-	public String test() {
-		throw new RuntimeException();
-	}
+	private static final Logger log = LogManager.getLogger(CustomerManagement.class);
+
+	private static final String SPRING_PROFILE_ARG = "spring.profiles.active";
 
 	public static void main(String[] args) {
-		SpringApplication.run(CustomerManagement.class, args);
+		SpringApplication app = new SpringApplication(CustomerManagement.class);
+
+		if (!isProfileSet(args)) {
+			addDevProfile(app);
+		}
+
+		app.run(args);
 	}
+
+	private static void addDevProfile(SpringApplication app) {
+		log.warn("Using default profile: {}", BuildConstants.SPRING_PROFILE_DEV);
+		app.setAdditionalProfiles(BuildConstants.SPRING_PROFILE_DEV);
+	}
+
+	private static boolean isProfileSet(String[] args) {
+		SimpleCommandLinePropertySource cmdLine = new SimpleCommandLinePropertySource(args);
+		return cmdLine.containsProperty(SPRING_PROFILE_ARG);
+	}
+
 }
