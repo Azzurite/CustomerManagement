@@ -25,7 +25,7 @@ describe('Controller tests', function() {
 
 			spyOn(Session, 'login').and.returnValue(jasmine.createSpyObj('promise', ['then']));
 
-			var LoginController = $controller('LoginController', {
+			$controller('LoginController', {
 				$scope: $scope,
 				Session: Session
 			});
@@ -46,7 +46,7 @@ describe('Controller tests', function() {
 			});
 			spyOn(Session, 'login').and.returnValue(promise);
 
-			var LoginController = $controller('LoginController', {
+			$controller('LoginController', {
 				$scope: $scope,
 				Session: Session,
 				$state: $state
