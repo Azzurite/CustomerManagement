@@ -7,7 +7,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,7 +18,6 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,14 +26,13 @@ import java.util.stream.Collectors;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {IntegrationTestConfig.class})
-@EnableAutoConfiguration
 @WebIntegrationTest
 @ActiveProfiles(BuildConstants.SPRING_PROFILE_INTEGRATION)
-@Transactional
 public abstract class AbstractIntegrationTest {
 
 	@Inject
 	private WebApplicationContext wac;
+
 
 	private final List<FieldRestoreInfo> fieldsToRestore = new ArrayList<>();
 
@@ -45,7 +42,7 @@ public abstract class AbstractIntegrationTest {
 	protected MockMvc mockMvc;
 
 	/**
-	 * Initializes Mockito mocks and sets up the mockMvc.
+	 * Initializes Mockito mocks, sets up the mockMvc and inserts registered items into the mongo database.
 	 */
 	@Before
 	public final void setup() {
@@ -55,6 +52,7 @@ public abstract class AbstractIntegrationTest {
 										 .get("/")
 										 .accept(WebConstants.MEDIA_TYPE_JSON))
 								 .build();
+
 	}
 
 
@@ -85,6 +83,8 @@ public abstract class AbstractIntegrationTest {
 			throw new RuntimeException(e);
 		}
 	}
+
+
 
 	private class FieldRestoreInfo {
 		private final Object objectToRestore;

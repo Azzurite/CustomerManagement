@@ -1,6 +1,7 @@
 package name.azzurite.customermanagement.config;
 
 import name.azzurite.customermanagement.domain.entity.conversion.AutoConfiguredDozerConverter;
+import name.azzurite.customermanagement.domain.entity.conversion.MongoConverter;
 import org.dozer.DozerBeanMapper;
 import org.dozer.classmap.MappingFileData;
 import org.dozer.loader.DozerBuilder;
@@ -8,12 +9,20 @@ import org.dozer.loader.api.BeanMappingBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.mongodb.core.convert.CustomConversions;
 
 import java.util.List;
 
 @Configuration
 @ComponentScan("name.azzurite.customermanagement.domain.entity.conversion")
-public class DozerConfig {
+public class ConversionConfig {
+
+
+	@Bean
+	public CustomConversions customConversions(List<MongoConverter> converters) {
+		return new CustomConversions(converters);
+	}
+
 	/**
 	 * Abuses the BeanMappingBuilder to build the {@link org.dozer.classmap.Configuration} object programatically
 	 * instead of via XML

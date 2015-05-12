@@ -3,7 +3,8 @@ package name.azzurite.customermanagement.test.domain.repository;
 import name.azzurite.customermanagement.domain.entity.Customer;
 import name.azzurite.customermanagement.domain.entity.component.UniqueName;
 import name.azzurite.customermanagement.domain.repository.CustomerRepository;
-import name.azzurite.customermanagement.test.AbstractIntegrationTest;
+import name.azzurite.customermanagement.test.AbstractMongoIntegrationTest;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.inject.Inject;
@@ -12,14 +13,19 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
-public class CustomerRepositoryTest extends AbstractIntegrationTest {
+public class CustomerRepositoryTest extends AbstractMongoIntegrationTest {
+
+	@BeforeClass
+	public static void db() {
+		dbAddForTests(new Customer(new UniqueName("TEST_CUSTOMER")));
+	}
 
 	@Inject
 	private CustomerRepository customerRepository;
 
 	@Test
 	public void FindByUniqueName_ShouldReturnCustomer_IfCustomerExists() {
-		Optional<Customer> customer = customerRepository.findOne(new UniqueName("TEST_CUSTOMER"));
+		Optional<Customer> customer = Optional.ofNullable(customerRepository.findOne(new UniqueName("TEST_CUSTOMER")));
 		assertThat(customer.isPresent(), is(true));
 
 		Customer expectedCustomer = new Customer(new UniqueName("TEST_CUSTOMER"));
@@ -28,7 +34,7 @@ public class CustomerRepositoryTest extends AbstractIntegrationTest {
 
 	@Test
 	public void FindByUniqueName_ShouldReturnEmpty_IfCustomerIsMissing() {
-		assertThat(customerRepository.findOne(new UniqueName("TEST_CUSTOMER_2")), is(Optional.empty()));
+		assertThat(customerRepository.findOne(new UniqueName("TEST_CUSTOMER_2")), nullValue());
 	}
 
 	@Test
@@ -45,7 +51,7 @@ public class CustomerRepositoryTest extends AbstractIntegrationTest {
 	@Test
 	public void Save_ShouldSaveEntity() {
 		Customer customer = new Customer(new UniqueName("TEST_CUSTOMER_2"));
-		customerRepository.saveAndFlush(customer);
+		customerRepository.save(customer);
 		assertThat(customerRepository.exists(new UniqueName("TEST_CUSTOMER_2")), is(true));
 	}
 

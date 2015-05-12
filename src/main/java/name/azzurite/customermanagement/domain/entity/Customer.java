@@ -1,12 +1,11 @@
 package name.azzurite.customermanagement.domain.entity;
 
 import name.azzurite.customermanagement.domain.entity.component.UniqueName;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Id;
 
-@Entity
+@Document
 public class Customer {
 
 	public Customer() {
@@ -17,7 +16,6 @@ public class Customer {
 	}
 
 	@Id
-	@Embedded
 	private UniqueName uniqueName;
 	public UniqueName getUniqueName() { return uniqueName; }
 	public void setUniqueName(UniqueName uniqueName) { this.uniqueName = uniqueName; }

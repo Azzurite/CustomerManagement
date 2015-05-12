@@ -1,9 +1,26 @@
 'use strict';
 
 /**
- * @description Adds a $status attribute to the successful result provided by the resource
+ * @ngdoc module
+ * @name azResourceAddStatus
+ * @requires ngResource
+ *
+ * @description
+ * Decorates $resource so that a $status attribute is added to the successful result
  */
-angular.module('azResourceAddStatus', ['ngResource']).config(
+angular.module('azResourceAddStatus', ['ngResource']);
+
+/**
+ * @ngdoc service
+ * @name $resource
+ * @requires $resourceProvider
+ * @requires $provide
+ *
+ * @description
+ * decorates $resource so that every object returned by it has a $status property which contains the HTTP
+ *     success code for the response
+ */
+angular.module('azResourceAddStatus').config(
 	function($resourceProvider, $provide) {
 
 		function addStatusToResult(result, status) {
@@ -55,6 +72,7 @@ angular.module('azResourceAddStatus', ['ngResource']).config(
 				}
 			}
 		};
+
 
 		$provide.decorator('$resource', function($delegate) {
 			return function(url, paramDefaults, actions, options) {

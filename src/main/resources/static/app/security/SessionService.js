@@ -1,7 +1,21 @@
 'use strict';
-
+/**
+ * @ngdoc service
+ * @name Session
+ * @requires $q
+ * @requires $http
+ * @requires $log
+ * @requires $rootScope
+ * @requires $state
+ * @requires CacheFactory
+ * @requires growl
+ * @requires azNetUtils
+ *
+ * @description
+ * Checks for and establishes a temporary javascript-only Session.
+ */
 angular.module('cmApp.security').service('Session',
-	function($q, $http, $log, $rootScope, $state, CacheFactory, growl, azzu) {
+	function($q, $http, $log, $rootScope, $state, CacheFactory, growl, azNetUtils) {
 		var self = this;
 		var sessionCache = CacheFactory.createCache('SessionCache', {
 			maxAge: 10000,
@@ -9,6 +23,13 @@ angular.module('cmApp.security').service('Session',
 		});
 
 
+		/**
+		 * @ngdoc onEvent
+		 * @name $stateChangeStart
+		 *
+		 * @description
+		 * Check for session on each route change and forward the user to login if missing.
+		 */
 		$rootScope.$on('$stateChangeStart',
 			function(event, toState, toParams) {
 				if (toState.name === 'login' || sessionCache.get('account')) {
@@ -28,6 +49,15 @@ angular.module('cmApp.security').service('Session',
 			}
 		);
 
+		/**
+		 * @ngdoc method
+		 * @name get
+		 *
+		 * @description
+		 * Try to get the session
+		 *
+		 * @returns {Promise} a promise that resolves with the Session data when a session is found
+		 */
 		this.get = function() {
 			var account = sessionCache.get('account');
 
@@ -64,6 +94,18 @@ angular.module('cmApp.security').service('Session',
 			});
 		}
 
+		/**
+		 * @ngdoc method
+		 * @name create
+		 *
+		 * @description
+		 * Creates a session by logging the user in and then retrieving the Session data. If a Session already exists,
+		 *     rejects the returned promise with the already existing Session data.
+		 *
+		 * @param username
+		 * @param password
+		 * @returns {Promise}
+		 */
 		this.create = function(username, password) {
 			return $q(function(resolve, reject) {
 				self.get().then(
@@ -87,18 +129,24 @@ angular.module('cmApp.security').service('Session',
 			});
 		};
 
+		/**
+		 * @ngdoc method
+		 * @name login
+		 *
+		 * @description
+		 * Logs the user in.
+		 *
+		 * @param username
+		 * @param password
+		 * @returns {Promise} resolves with the login result.
+		 */
 		this.login = function(username, password) {
 			return $q(function(resolve, reject) {
-				$http({
-					method: 'POST',
-					url: '/login',
-					headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-					transformRequest: azzu.formPostTransform,
-					data: {
+				azNetUtils.formPost('/login', {
 						username: username,
 						password: password
 					}
-				}).success(
+				).success(
 					function() {
 						resolve();
 					}

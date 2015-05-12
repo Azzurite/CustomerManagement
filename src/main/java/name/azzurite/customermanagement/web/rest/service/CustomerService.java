@@ -32,7 +32,7 @@ public class CustomerService {
 	}
 
 	public Optional<CustomerTO> find(String uniqueName) {
-		Optional<Customer> customer = customerRepository.findOne(new UniqueName(uniqueName));
+		Optional<Customer> customer = Optional.ofNullable(customerRepository.findOne(new UniqueName(uniqueName)));
 		if (!customer.isPresent()) {
 			return Optional.empty();
 		}
@@ -42,7 +42,7 @@ public class CustomerService {
 
 	public CustomerTO save(CustomerTO customerTO) {
 		Customer customer = mapper.map(customerTO, Customer.class);
-		return mapper.map(customerRepository.saveAndFlush(customer), CustomerTO.class);
+		return mapper.map(customerRepository.save(customer), CustomerTO.class);
 	}
 
 	public void delete(UniqueName uniqueName) {

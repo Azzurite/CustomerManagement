@@ -1,11 +1,9 @@
 package name.azzurite.customermanagement.domain.entity.component;
 
-import com.fasterxml.jackson.annotation.JsonValue;
+//import com.fasterxml.jackson.annotation.JsonValue;
 
-import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-@Embeddable
 public class UniqueName implements Serializable {
 	public UniqueName() {
 	}
@@ -14,7 +12,7 @@ public class UniqueName implements Serializable {
 	}
 
 	private String uniqueName;
-	@JsonValue
+	//	@JsonValue
 	public String getUniqueName() {
 		return uniqueName;
 	}

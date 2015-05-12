@@ -4,13 +4,18 @@ import name.azzurite.customermanagement.config.constants.BuildConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 /**
  * Main application class
  */
-@SpringBootApplication
+@Configuration
+@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class})
+@ComponentScan
 public class CustomerManagement {
 
 	private static final Logger log = LogManager.getLogger(CustomerManagement.class);

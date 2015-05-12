@@ -1,7 +1,3 @@
-flyway:
-    locations:
-        classpath:db/schema
-
 dozer:
     configuration:
         classpath:config/dozer/mapping.xml
@@ -14,4 +10,3 @@ spring:
                 none
             format_sql:
                 true
-
