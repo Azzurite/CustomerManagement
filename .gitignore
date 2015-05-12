@@ -1,3 +1,8 @@
+# ignore generated styles
+src/main/resources/static/assets/styles/
+
+
+# Ignore database and other confidential settings
 application-*.yml
 
 # Created by https://www.gitignore.io
