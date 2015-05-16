@@ -1,0 +1,13 @@
+<form class="form-inline">
+	<div class="form-group">
+		<button class="btn-sm btn-default" ng-click="remove();">
+			<small><span class="glyphicon glyphicon-remove"></span></small>
+		</button>
+	</div>
+	<div class="form-group">
+		<select class="form-control input-sm" ng-model="selected" ng-options="option for option in options"></select>
+	</div>
+	<div class="form-group">
+		<input class="form-control input-sm" ng-model="filterValue" type="text" />
+	</div>
+</form>

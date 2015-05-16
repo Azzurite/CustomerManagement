@@ -2,6 +2,7 @@
 
 angular.module('cmApp.dependencies', [
 	'azUtils',
+	'azData',
 	'azResourceAddStatus',
 	'ngCookies',
 	'ngResource',
@@ -17,7 +18,8 @@ angular.module('cmApp', [
 		'cmApp.customers'
 	]
 ).config(
-	function($stateProvider, $urlRouterProvider, $locationProvider, growlProvider) {
+	function($stateProvider, $urlRouterProvider, $locationProvider, growlProvider, $compileProvider) {
+		//$compileProvider.debugInfoEnabled(false);
 		$locationProvider.html5Mode({
 			enabled: true
 		});

@@ -1,12 +1,14 @@
+@import "variables";
 // bower:scss
 @import "../static/bower_components/bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 // endbower
-@import "theme";
 @import "base";
+@import "theme";
 
 body {
 	color: $font-color;
 	background-color: $main-background-color;
+	padding-top: 70px;
 }
 
 .cartman {

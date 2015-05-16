@@ -1,14 +1,12 @@
 package name.azzurite.customermanagement.web.rest.resource;
 
-import name.azzurite.customermanagement.domain.entity.component.UniqueName;
-import name.azzurite.customermanagement.domain.entity.transfer.CustomerTO;
+import name.azzurite.customermanagement.domain.entity.Customer;
 import name.azzurite.customermanagement.web.rest.service.CustomerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.util.List;
 
 @RestController
 @RequestMapping("/rest/customers")
@@ -26,7 +24,7 @@ public class CustomerResource {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<?> save(@RequestBody CustomerTO customer) {
+	public ResponseEntity<?> save(@RequestBody Customer customer) {
 		HttpStatus statusCode;
 		if (customerService.find(customer.getUniqueName()).isPresent()) {
 			statusCode = HttpStatus.OK;
@@ -37,13 +35,13 @@ public class CustomerResource {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<?> getAll() {
-		List<CustomerTO> customers = customerService.getAll();
-		return new ResponseEntity<>(customers, HttpStatus.OK);
+	public ResponseEntity<?> getAllOverview() {
+		return new ResponseEntity<>(customerService.getAllOverview(), HttpStatus.OK);
 	}
 
+
 	@RequestMapping(value = "/{uniqueName}", method = RequestMethod.DELETE)
-	public ResponseEntity<?> deleteCustomer(@PathVariable UniqueName uniqueName) {
+	public ResponseEntity<?> deleteCustomer(@PathVariable String uniqueName) {
 		customerService.delete(uniqueName);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

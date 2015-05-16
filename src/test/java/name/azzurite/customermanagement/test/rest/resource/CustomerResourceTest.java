@@ -2,7 +2,6 @@ package name.azzurite.customermanagement.test.rest.resource;
 
 import name.azzurite.customermanagement.config.constants.WebConstants;
 import name.azzurite.customermanagement.domain.entity.Customer;
-import name.azzurite.customermanagement.domain.entity.component.UniqueName;
 import name.azzurite.customermanagement.test.AbstractMongoIntegrationTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -15,7 +14,7 @@ public class CustomerResourceTest extends AbstractMongoIntegrationTest {
 
 	@BeforeClass
 	public static void db() {
-		dbAddForTests(new Customer(new UniqueName("TEST_CUSTOMER")));
+		dbAddForTests(new Customer("TEST_CUSTOMER"));
 	}
 
 	@Test

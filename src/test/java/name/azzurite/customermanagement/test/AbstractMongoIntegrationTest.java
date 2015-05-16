@@ -15,6 +15,8 @@ import java.util.List;
 
 public class AbstractMongoIntegrationTest extends AbstractIntegrationTest {
 
+	private static List<Object> databaseItemsForTest = new ArrayList<>();
+
 	@Inject
 	private Mongo mongo;
 
@@ -24,21 +26,46 @@ public class AbstractMongoIntegrationTest extends AbstractIntegrationTest {
 	@Value("${spring.data.mongodb.database}")
 	private String curDatabaseName;
 
-	private static List<Object> databaseItemsForTest = new ArrayList<>();
-
 	@AfterClass
 	public static void clearItems() {
 		databaseItemsForTest.clear();
+	}
+
+	/**
+	 * Add the object to the mongodb database for the duration of each test.
+	 *
+	 * @param item the object to add to the database
+	 */
+	protected static void dbAddForTests(Object item) {
+		databaseItemsForTest.add(item);
+	}
+
+	/**
+	 * Add the objects to the mongodb database for the duration of each test.
+	 *
+	 * @param items the objects to add to the database
+	 */
+	protected static <T> void dbAddForTests(Iterable<T> items) {
+		for (T item : items) {
+			dbAddForTests(item);
+		}
+	}
+
+	/**
+	 * Add the objects to the mongodb database for the duration of each test.
+	 *
+	 * @param items the objects to add to the database
+	 */
+	protected static <T> void dbAddForTests(T... items) {
+		for (T item : items) {
+			dbAddForTests(item);
+		}
 	}
 
 	@Before
 	public void insertDatabaseItems() {
 		clearDatabase();
 		databaseItemsForTest.forEach(ops::insert);
-	}
-
-	protected static void dbAddForTests(Object obj) {
-		databaseItemsForTest.add(obj);
 	}
 
 	@After
@@ -48,18 +75,6 @@ public class AbstractMongoIntegrationTest extends AbstractIntegrationTest {
 			if (collection.startsWith("system")) continue;
 
 			db.getCollection(collection).remove(new BasicDBObject());
-		}
-	}
-
-	protected static <T> void dbAddForTests(Iterable<T> items) {
-		for (T item : items) {
-			dbAddForTests(item);
-		}
-	}
-
-	protected static <T> void dbAddForTests(T... items) {
-		for (T item : items) {
-			dbAddForTests(item);
 		}
 	}
 }

@@ -1,8 +1,6 @@
 package name.azzurite.customermanagement.web.rest.service;
 
 import name.azzurite.customermanagement.domain.entity.Customer;
-import name.azzurite.customermanagement.domain.entity.component.UniqueName;
-import name.azzurite.customermanagement.domain.entity.transfer.CustomerTO;
 import name.azzurite.customermanagement.domain.repository.CustomerRepository;
 import org.dozer.Mapper;
 import org.springframework.stereotype.Service;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Service;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CustomerService {
@@ -25,27 +22,24 @@ public class CustomerService {
 		this.mapper = mapper;
 	}
 
-	public List<CustomerTO> getAll() {
-		List<Customer> customers = customerRepository.findAll();
-		return customers.stream().map((customer) -> mapper.map(customer, CustomerTO.class))
-						.collect(Collectors.toList());
+	public List<Customer> getAll() {
+		return customerRepository.findAll();
 	}
 
-	public Optional<CustomerTO> find(String uniqueName) {
-		Optional<Customer> customer = Optional.ofNullable(customerRepository.findOne(new UniqueName(uniqueName)));
-		if (!customer.isPresent()) {
-			return Optional.empty();
-		}
-		return Optional.of(mapper.map(customer.get(), CustomerTO.class));
+	public List<Customer> getAllOverview() {
+		return customerRepository.findAllOverview();
+	}
+
+	public Optional<Customer> find(String uniqueName) {
+		return Optional.ofNullable(customerRepository.findOne(uniqueName));
 	}
 
 
-	public CustomerTO save(CustomerTO customerTO) {
-		Customer customer = mapper.map(customerTO, Customer.class);
-		return mapper.map(customerRepository.save(customer), CustomerTO.class);
+	public Customer save(Customer customer) {
+		return customerRepository.save(customer);
 	}
 
-	public void delete(UniqueName uniqueName) {
+	public void delete(String uniqueName) {
 		customerRepository.delete(uniqueName);
 	}
 }
