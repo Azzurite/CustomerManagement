@@ -5,8 +5,12 @@ dozer:
 
 spring:
     jpa:
+        openInView: false
+        generate-ddl: false
         hibernate:
             ddl-auto:
                 none
-            format_sql:
-                true
+
+        properties:
+            hibernate.cache.use_second_level_cache: false
+            hibernate.cache.use_query_cache: false
