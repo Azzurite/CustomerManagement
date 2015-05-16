@@ -19,7 +19,7 @@ import java.util.UUID;
  * @see #CSRF_COOKIE_NAME
  * @see #CSRF_HEADER_NAME
  */
-public class CookieCsrfTokenRepository implements CsrfTokenRepository {
+public class CsrfCookieRepository implements CsrfTokenRepository {
 
 	/**
 	 * The name of the cookie in which the {@link CsrfToken} will be stored.
@@ -37,6 +37,7 @@ public class CookieCsrfTokenRepository implements CsrfTokenRepository {
 	public CsrfToken generateToken(HttpServletRequest request) {
 		return new DefaultCsrfToken(CSRF_HEADER_NAME, CSRF_PARAMETER_NAME, UUID.randomUUID().toString());
 	}
+
 	@Override
 	public void saveToken(CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -52,7 +53,6 @@ public class CookieCsrfTokenRepository implements CsrfTokenRepository {
 			}
 
 			URL requestUrl = new URL(request.getRequestURL().toString());
-			csrfCookie.setDomain(requestUrl.getHost());
 			csrfCookie.setPath("/");
 
 			response.addCookie(csrfCookie);
@@ -61,6 +61,7 @@ public class CookieCsrfTokenRepository implements CsrfTokenRepository {
 			throw new RuntimeException(e);
 		}
 	}
+
 	@Override
 	public CsrfToken loadToken(HttpServletRequest request) {
 		if (request.getCookies() == null) {
@@ -69,8 +70,8 @@ public class CookieCsrfTokenRepository implements CsrfTokenRepository {
 
 		Optional<Cookie> loadedCookie =
 				Arrays.stream(request.getCookies())
-					  .filter((cookie) -> CSRF_COOKIE_NAME.equals(cookie.getName()))
-					  .findAny();
+						.filter((cookie) -> CSRF_COOKIE_NAME.equals(cookie.getName()))
+						.findAny();
 
 		if (!loadedCookie.isPresent()) {
 			return null;

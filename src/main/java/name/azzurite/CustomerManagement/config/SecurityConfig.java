@@ -3,7 +3,7 @@ package name.azzurite.customermanagement.config;
 import name.azzurite.customermanagement.config.constants.SecurityConstants;
 import name.azzurite.customermanagement.config.constants.WebConstants;
 import name.azzurite.customermanagement.web.security.AddCsrfCookieFilter;
-import name.azzurite.customermanagement.web.security.CookieCsrfTokenRepository;
+import name.azzurite.customermanagement.web.security.CsrfCookieRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// add cookie-based CSRF-protection
 		http.csrf()
-			.csrfTokenRepository(new CookieCsrfTokenRepository());
+			.csrfTokenRepository(new CsrfCookieRepository());
 
 		// authorize angular locations
 		http.authorizeRequests().antMatchers(WebConstants.APP_LOCATIONS).permitAll();

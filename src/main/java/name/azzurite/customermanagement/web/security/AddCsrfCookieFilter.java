@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Adds a CSRF cookie to the request if it is missing. Uses {@link CookieCsrfTokenRepository}.
+ * Adds a CSRF cookie to the request if it is missing. Uses {@link CsrfCookieRepository}.
  */
 public class AddCsrfCookieFilter extends GenericFilterBean {
 	@Override
@@ -24,7 +24,7 @@ public class AddCsrfCookieFilter extends GenericFilterBean {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-		CookieCsrfTokenRepository cookieCsrfTokenRepository = new CookieCsrfTokenRepository();
+		CsrfCookieRepository cookieCsrfTokenRepository = new CsrfCookieRepository();
 		CsrfToken csrfToken = cookieCsrfTokenRepository.loadToken(httpRequest);
 		if (csrfToken == null) {
 			csrfToken = cookieCsrfTokenRepository.generateToken(httpRequest);
