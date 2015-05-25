@@ -126,16 +126,6 @@ public class Customer {
 	public void setContactInfo(List<ContactInfo> contactInfo) { this.contactInfo = contactInfo; }
 
 	/**
-	 * @return the uniqueName
-	 */
-	public String getString() { return uniqueName; }
-
-	/**
-	 * @param uniqueName the uniqueName to set
-	 */
-	public void setString(String uniqueName) { this.uniqueName = uniqueName; }
-
-	/**
 	 * @return the firstName
 	 */
 	public String getFirstName() { return firstName; }
