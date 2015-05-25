@@ -1,0 +1,66 @@
+<az-sidebar-wrapper id="filter" init-shown="false" sidebar-columns="3" content-columns="13">
+	<az-sidebar>
+		<az-filter filter="customers" output="filteredCustomers" filter-options="filterOptions"></az-filter>
+	</az-sidebar>
+	<az-sidebar-content>
+		<div class="page-header">
+			<h1>Customer list</h1>
+		</div>
+
+		<a ui-sref="customer.create" class="btn btn-default" role="button">Create customer</a>
+
+		<table class="table table-bordered">
+			<tr az-sort="filteredCustomers" az-sort-output="sortedCustomers">
+				<th class="col-md-2" az-sort-field="type">
+					Type
+				</th>
+				<th class="col-md-2" az-sort-field="lastName,firstName">
+					Name
+				</th>
+				<th class="col-md-2">
+					Company
+				</th>
+				<th class="col-md-5" az-sort-field="relationshipStatus">
+					Status
+				</th>
+				<th class="col-md-5" az-sort-field="currentTask">
+					Task
+				</th>
+				<th>
+				</th>
+			</tr>
+
+			<tr ng-repeat="customer in sortedCustomers" ng-click="">
+				<td>
+					<a ui-sref="customer.summary({ id: customer.uniqueName })">
+						{{ customer.type }}
+					</a>
+				</td>
+				<td>
+					<a ui-sref="customer.summary({ id: customer.uniqueName })">
+						{{ customer.firstName }} {{ customer.lastName }}
+					</a>
+				</td>
+				<td>
+					<a ui-sref="customer.summary({ id: customer.uniqueName })">
+						{{ customer.companies | json }}
+					</a>
+				</td>
+				<td>
+					<a ui-sref="customer.summary({ id: customer.uniqueName })">
+						{{ customer.relationshipStatus }}
+					</a>
+				</td>
+				<td>
+					<a ui-sref="customer.summary({ id: customer.uniqueName })">
+						{{ customer.currentTask }}
+					</a>
+				</td>
+				<td>
+					<button class="btn btn-danger" type="button" ng-click="deleteCustomer(customer);"><span
+							class="glyphicon glyphicon-remove"></span></button>
+				</td>
+			</tr>
+		</table>
+	</az-sidebar-content>
+</az-sidebar-wrapper>

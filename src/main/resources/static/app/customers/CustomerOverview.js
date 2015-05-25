@@ -2,25 +2,27 @@
 
 angular.module('cmApp.customers').config(
 	function($stateProvider) {
-		$stateProvider.state('customers', {
-			url: '/customers/:id',
+		$stateProvider.state('customer.overview', {
+			url: '/customers',
 			views: {
-				navsub: {
-					templateUrl: 'app/customers/navsub.html'
+				'navsub@': {
+					templateUrl: 'app/customers/CustomerOverview-navsub.html'
 				},
 
 				'': {
-					templateUrl: 'app/customers/customers.html',
-					controllerAs: 'CustomerController',
-					controller: function($scope, $log, CustomersService, $state) {
-						$scope.customers = CustomersService.query(
-							function(data) {
-								$log.debug('Found customers: ', data);
-							},
-							function(data, headers) {
-								$log.error('Error while retrieving customer list: ', data, headers);
-							}
-						);
+					templateUrl: 'app/customers/CustomerOverview.html',
+					resolve: {
+						customers: function(CustomersService, $log) {
+							return CustomersService.query(function(data) {
+									$log.debug('Found customers: ', data);
+								},
+								function(data, headers) {
+									$log.error('Error while retrieving customer list: ', data, headers);
+								});
+						}
+					},
+					controller: function($scope, $log, CustomersService, $state, customers) {
+						$scope.customers = customers;
 
 						$scope.newCustomer = {};
 
@@ -65,7 +67,6 @@ angular.module('cmApp.customers').config(
 								}
 							);
 						};
-
 					}
 				}
 			}
