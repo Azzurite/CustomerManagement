@@ -4,11 +4,47 @@
 // endbower
 @import "base";
 @import "theme";
+@import "bootstrap-override";
+
+body, html {
+	height: 100%;
+}
 
 body {
 	color: $font-color;
 	background-color: $main-background-color;
-	padding-top: 70px;
+
+	display: flex;
+	flex-direction: column;
+}
+
+a.nohover {
+	&:hover, &:focus {
+		color: $link-color;
+		text-decoration: none;
+	}
+}
+
+.navbar-nomargin {
+	@extend .navbar;
+
+	margin: 0;
+}
+
+.glyphicon.center:before {
+	vertical-align: middle;
+}
+
+.content {
+	flex: 1;
+	overflow: hidden;
+}
+
+.content-container {
+	@extend .container;
+
+	overflow: auto;
+	height: 100%;
 }
 
 .cartman {
@@ -16,4 +52,9 @@ body {
 	height: 308px;
 	width: 338px;
 	float: left;
+}
+
+.use-remaining-width {
+	overflow: auto;
+	padding: 0px 3px;
 }

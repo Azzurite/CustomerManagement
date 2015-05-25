@@ -25,7 +25,7 @@
 				browser.</h1>
 		</div>
 	</noscript>
-	<nav class="navbar navbar-default navbar-fixed-top">
+	<nav class="navbar-nomargin navbar-default">
 		<div class="container">
 			<div class="navbar-header">
 				<a class="navbar-brand" ui-sref="home">Customer management</a>
@@ -47,8 +47,10 @@
 		</div>
 	</nav>
 
-	<div ui-view class="container"></div>
-	<div class="footer"></div>
+	<div class="content">
+		<div ui-view class="content-container"></div>
+	</div>
+	<div class="footer"><div class="container"></div></div>
 	<div growl></div>
 
 	<!-- build:js scripts/vendor.js -->
