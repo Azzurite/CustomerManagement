@@ -1,8 +1,28 @@
 'use strict';
 
+/**
+ * @ngdoc directive
+ * @name azFilter
+ *
+ * @requires $filter
+ * @requires azUtils
+ *
+ * @restrict E
+ *
+ * @description
+ * Provides a way to filter an array of objects by multiple of the array object's properties.
+ *
+ * @param {Array} filter the array of objects to filter
+ * @param {Array} output the filtered array
+ * @param {Object} filterOptions an object with the keys as names for a filter and the values as the property of the
+ *     object in the array to filter by.
+ *     Can be an array of values as well, it will then be filtered by "property1 + ' ' + property2 + ' ' + ....".
+ *
+ */
 angular.module('azData').directive('azFilter', function($compile) {
 	return {
-		template: '<h2>Filters</h2><div></div><button type="button" class="btn btn-default" ng-click="addFilter();">Add filter</button>',
+		templateUrl: 'app/util/data/filter.html',
+		restrict: 'E',
 		scope: {
 			toFilter: '=filter',
 			output: '=',
@@ -16,6 +36,8 @@ angular.module('azData').directive('azFilter', function($compile) {
 					{futureParentElement: elem});
 				filterContainer.append(newFilter);
 			};
+			// add first
+			scope.addFilter();
 		},
 		controller: function($scope, $element, $attrs, azUtils, $filter) {
 			var self = this;
@@ -47,16 +69,19 @@ angular.module('azData').directive('azFilter', function($compile) {
 			};
 
 
+			function lowerNormalizedString(s) {
+				return (s || '').toLocaleLowerCase();
+			}
+
 			function multiPropertyContains(value, object, properties) {
-				var matched = false;
+				var appended = '';
 				angular.forEach(properties, function(property) {
-					var objectProperty = (object[property] || '').toLocaleLowerCase();
-					var filterValue = (value || '').toLocaleLowerCase();
-					if (objectProperty.indexOf(filterValue) > -1) {
-						matched = true;
-					}
+					var propertyValue = lowerNormalizedString(object[property]);
+					appended += ' ' + propertyValue;
 				});
-				return matched;
+
+				var filterValue = lowerNormalizedString(value);
+				return appended.indexOf(filterValue) > -1;
 			}
 
 			function filter() {
@@ -72,11 +97,22 @@ angular.module('azData').directive('azFilter', function($compile) {
 	};
 });
 
-
+/**
+ * @ngdoc directive
+ * @name azFilterElement
+ *
+ * @restrict E
+ *
+ * @description
+ * A filter element created by the azFilter directive.
+ *
+ * @param {Array} options the options that can be filtered
+ */
 angular.module('azData').directive('azFilterElement', function(azUtils) {
 	return {
 		templateUrl: 'app/util/data/filterElement.html',
 		require: '^azFilter',
+		restrict: 'E',
 		scope: {options: '='},
 		link: function(scope, elem, attrs, controller) {
 			scope.$watchCollection('options', function(val) {
