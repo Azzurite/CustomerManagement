@@ -2,7 +2,11 @@ package name.azzurite.customermanagement.web.rest.service;
 
 import name.azzurite.customermanagement.domain.entity.Customer;
 import name.azzurite.customermanagement.domain.repository.CustomerRepository;
+import name.azzurite.customermanagement.web.rest.error.Errors;
+import name.azzurite.customermanagement.web.rest.error.ServiceException;
+import name.azzurite.customermanagement.web.util.UniqueNameGenerator;
 import org.dozer.Mapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -36,6 +40,20 @@ public class CustomerService {
 
 
 	public Customer save(Customer customer) {
+		if (!find(customer.getUniqueName()).isPresent()) {
+			throw new ServiceException(HttpStatus.NOT_FOUND);
+		}
+		return customerRepository.save(customer);
+	}
+
+	public Customer create(Customer customer) {
+		if (customer.getFirstName() == null || customer.getLastName() == null) {
+			throw new ServiceException(HttpStatus.BAD_REQUEST, Errors.create("CUSTOMER_WITHOUT_NAME"));
+		}
+
+		String customerName = customer.getFirstName() + " " + customer.getLastName();
+		String uniqueName = UniqueNameGenerator.generate(customerName, this::find);
+		customer.setUniqueName(uniqueName);
 		return customerRepository.save(customer);
 	}
 

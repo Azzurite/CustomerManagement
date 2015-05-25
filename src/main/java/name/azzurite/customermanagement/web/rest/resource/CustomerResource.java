@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/rest/customers")
@@ -25,18 +26,27 @@ public class CustomerResource {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<?> save(@RequestBody Customer customer) {
-		HttpStatus statusCode;
-		if (customerService.find(customer.getUniqueName()).isPresent()) {
-			statusCode = HttpStatus.OK;
-		} else {
-			statusCode = HttpStatus.CREATED;
-		}
-		return new ResponseEntity<>(customerService.save(customer), statusCode);
+		return new ResponseEntity<>(customerService.save(customer), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public ResponseEntity<?> create(@RequestBody Customer customer) {
+		Customer created = customerService.create(customer);
+		return new ResponseEntity<>(created, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public ResponseEntity<?> getAllOverview() {
 		return new ResponseEntity<>(customerService.getAllOverview(), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/{uniqueName}", method = RequestMethod.GET)
+	public ResponseEntity<?> getCustomer(@PathVariable String uniqueName) {
+		Optional<Customer> customer = customerService.find(uniqueName);
+		if (!customer.isPresent()) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(customer.get(), HttpStatus.OK);
 	}
 
 
