@@ -6,7 +6,9 @@ public class WebConstants {
 
 	public static final String[] APP_LOCATIONS = {
 			"/login",
-			"/customers/*"
+			"/customers",
+			"/customers/*",
+			"/customers/*/summary"
 	};
 
 }
